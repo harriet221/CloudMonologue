@@ -3,15 +3,11 @@ package com.ysj.cloudmonologue.domain.monologue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
-import static lombok.AccessLevel.PROTECTED;
+import java.time.LocalDate;
 
-@Entity
-@Builder
-@AllArgsConstructor(access = PROTECTED)
-@NoArgsConstructor(access = PROTECTED)
 @Setter
 @Getter
-@ToString(callSuper = true)
 public class Monologue {
-
+    private Long id;
+    private LocalDate createDate;
 }
