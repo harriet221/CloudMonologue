@@ -12,20 +12,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ApiMemberController {
     private final MemberService memberService;
 
-    @GetMapping("/save")
-    public String save() {
-        return "save";
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
     }
 
-    @PostMapping("/save")
-    public String save(MemberDto memberDto) {
+    @PostMapping("/signup")
+    public String signup(MemberDto memberDto) {
         memberService.save(memberDto);
-        return "redirect:/main";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "Please login";
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(MemberDto memberDto) {
+        memberService.login(memberDto);
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
