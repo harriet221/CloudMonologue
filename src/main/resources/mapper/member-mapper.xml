@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Member">
-    <insert id="signup" parameterType="member">
-        insert into MEMBER_TABLE(userId, userName, password)
-        values(#{userId}, #{userName}, #{password})
+    <insert id="save" parameterType="member" useGeneratedKeys="true" keyProperty="id">
+        insert into MEMBER_TABLE(userId, username, password)
+            values(#{userId}, #{username}, #{password})
     </insert>
 </mapper>

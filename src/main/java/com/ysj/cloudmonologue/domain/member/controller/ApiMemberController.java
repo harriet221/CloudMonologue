@@ -7,18 +7,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class ApiMemberController {
     private final MemberService memberService;
 
+    @GetMapping("/main")
+    public String showMain(Principal principal) {
+        System.out.println("----------"+principal.getName()+"--------------");
+        return "main";
+    }
+
     @GetMapping("/signup")
-    public String signup() {
+    public String save() {
         return "signup";
     }
 
-    @PostMapping("/signup")
-    public String signup(MemberDto memberDto) {
+    @PostMapping("/save")
+    public String save(MemberDto memberDto) {
+        // 이미 가입한 회원 인지 체크
         memberService.save(memberDto);
         return "redirect:/login";
     }
@@ -30,12 +39,13 @@ public class ApiMemberController {
 
     @PostMapping("/login")
     public String login(MemberDto memberDto) {
-        memberService.login(memberDto);
-        return "redirect:/";
+        // 있는 ID 인지 체크
+        // 비번 맞는지 체크
+        return "redirect:/main";
     }
 
     @GetMapping("/logout")
     public String logout() {
-        return "You have been logged out";
+        return "redirect:/";
     }
 }
