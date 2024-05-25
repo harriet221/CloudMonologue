@@ -6,6 +6,10 @@
 </head>
 <body>
 <h2>MAIN HOME</h2>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+<div th:text="'Welcome, ' + ${member.username} + '. Enjoy your time'"></div><br>
 <a href="/logout">로그아웃</a>
 </body>
 </html>

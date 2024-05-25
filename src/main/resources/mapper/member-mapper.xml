@@ -8,6 +8,6 @@
             values(#{userId}, #{username}, #{password})
     </insert>
     <select id="findByUserId" parameterType="String" resultType="member">
-        select id, userId, password from MEMBER_TABLE where userId=#{userId}
+        select id, userId, username, password from MEMBER_TABLE where userId=#{userId}
     </select>
 </mapper>
