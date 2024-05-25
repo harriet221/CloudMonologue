@@ -29,8 +29,13 @@ public class ApiMemberController {
     }
 
     @PostMapping("/signup")
-    public String signup(MemberDto memberDto) {
-        // 이미 가입한 회원 인지 체크
+    public String signup(MemberDto memberDto, Model model) {
+        // 이미 가입한 ID 인지 체크
+        MemberDto memberInfoDto = memberService.findByUserId(memberDto.getUserId());
+        if(memberInfoDto != null) {
+            model.addAttribute("error", "! 이미 사용 중인 ID 입니다 !");
+            return "signup";
+        }
         memberService.save(memberDto);
         return "redirect:/login";
     }
