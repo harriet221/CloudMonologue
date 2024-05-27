@@ -147,3 +147,21 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection wa
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 90 more
+2024-05-27 17:32:39.057971+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "(\000d\000a\0009[*]id bigint primary key auto_increment,\000d\000a    content varchar(255)\000d\000a)"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+(
+	id bigint primary key auto_increment,
+    content varchar(255)
+) [42001-224]
+2024-05-27 17:33:36.249023+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "(\000d\000a    [*]id bigint primary key auto_increment,\000d\000a    content varchar(255)\000d\000a)"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+(
+    id bigint primary key auto_increment,
+    content varchar(255)
+) [42001-224]
+2024-05-27 17:35:28.348433+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "(\000d\000a    [*]id bigint primary key auto_increment,\000d\000a    content varchar(255)\000d\000a)"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+(
+    id bigint primary key auto_increment,
+    content varchar(255)
+) [42001-224]

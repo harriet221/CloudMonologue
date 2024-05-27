@@ -4,5 +4,6 @@
 <configuration>
     <typeAliases>
         <typeAlias type="com.ysj.cloudmonologue.domain.member.dto.MemberDto" alias="member"></typeAlias>
+        <typeAlias type="com.ysj.cloudmonologue.domain.monologue.dto.MonologueDto" alias="mono"></typeAlias>
     </typeAliases>
 </configuration>

@@ -17,7 +17,7 @@ public class MemberDto {
 }
 
 /*
--- board_table
+-- member_table
  drop table if exists MEMBER_TABLE;
  create table MEMBER_TABLE
  (
