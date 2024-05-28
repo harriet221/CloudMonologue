@@ -9,4 +9,11 @@ import org.springframework.stereotype.Repository;
 public class QuestionRepository {
     private final SqlSessionTemplate sql;
 
+    public String findById(Long id) {
+        return sql.selectOne("Question.findById", id);
+    }
+
+    public int countTotal() {
+        return sql.selectOne("Question.countTotal");
+    }
 }

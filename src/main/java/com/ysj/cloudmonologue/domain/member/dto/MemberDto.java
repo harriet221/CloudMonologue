@@ -14,6 +14,8 @@ public class MemberDto {
     private String userId;
     private String username;
     private String password;
+    private String bannedQuestions;
+    // private List<Long> bannedQuestions;
 }
 
 /*
@@ -26,6 +28,7 @@ public class MemberDto {
     modifyDate datetime,
     userId varchar(20),
     username varchar(20),
-    password varchar(20)
+    password varchar(20),
+    bannedQuestions text
 );
 * */
