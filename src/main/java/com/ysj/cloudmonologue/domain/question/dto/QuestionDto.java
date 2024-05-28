@@ -21,3 +21,14 @@ public class QuestionDto {
     content varchar(255)
 );
 * */
+
+/*
+insert into QUESTION_TABLE (content) values ('Are you a happy person?');
+insert into QUESTION_TABLE (content) values ('What is happiness for you?');
+insert into QUESTION_TABLE (content) values ('What do you think is the color for happiness?');
+insert into QUESTION_TABLE (content) values ('Do you think that happiness lies within you? Or does it depend upon other people and external things?');
+insert into QUESTION_TABLE (content) values ('Can money buy happiness?');
+insert into QUESTION_TABLE (content) values ('Is happiness a state of mind?');
+insert into QUESTION_TABLE (content) values ('What makes you feel happy?');
+insert into QUESTION_TABLE (content) values ('What are the three most important things for you to be happy?');
+ */
