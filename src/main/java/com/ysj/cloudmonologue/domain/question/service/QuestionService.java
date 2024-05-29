@@ -1,5 +1,6 @@
 package com.ysj.cloudmonologue.domain.question.service;
 
+import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
 import com.ysj.cloudmonologue.domain.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     // 질문 id로 내용 찾는 메서드
-    public String findQuestionById(Long id) {
+    public QuestionDto findQuestionById(Long id) {
         return questionRepository.findById(id);
     }
 

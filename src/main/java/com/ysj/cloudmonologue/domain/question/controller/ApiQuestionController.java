@@ -2,6 +2,7 @@ package com.ysj.cloudmonologue.domain.question.controller;
 
 import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
+import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
 import com.ysj.cloudmonologue.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class ApiQuestionController {
                     .toList();
             questionId = questionService.pickQuestion(bannedQuestions);
         }
-        String question = questionService.findQuestionById(questionId);
+        QuestionDto question = questionService.findQuestionById(questionId);
         model.addAttribute("question", question);
         return "today";
     }

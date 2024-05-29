@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias type="com.ysj.cloudmonologue.domain.member.dto.MemberDto" alias="member"></typeAlias>
-        <typeAlias type="com.ysj.cloudmonologue.domain.monologue.dto.MonologueDto" alias="mono"></typeAlias>
-        <typeAlias type="com.ysj.cloudmonologue.domain.question.dto.QuestionDto" alias="question"></typeAlias>
+        <typeAlias type="com.ysj.cloudmonologue.domain.member.dto.MemberDto" alias="member"/>
+        <typeAlias type="com.ysj.cloudmonologue.domain.monologue.dto.MonologueDto" alias="mono"/>
+        <typeAlias type="com.ysj.cloudmonologue.domain.question.dto.QuestionDto" alias="question"/>
     </typeAliases>
 </configuration>
