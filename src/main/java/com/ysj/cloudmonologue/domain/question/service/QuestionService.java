@@ -4,6 +4,7 @@ import com.ysj.cloudmonologue.domain.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,6 +16,10 @@ public class QuestionService {
     // 질문 id로 내용 찾는 메서드
     public String findQuestionById(Long id) {
         return questionRepository.findById(id);
+    }
+
+    public Long pickQuestion() {
+        return pickQuestion(new ArrayList<>());
     }
 
     // 랜덤 질문 뽑는 메서드
