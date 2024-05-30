@@ -10,5 +10,6 @@
     <p th:text="${error}"></p>
 </div>
 <div th:text="'today\'s question: ' + ${question.content}"></div>
+<a th:href="@{|/banned/${question.id}|}">I don't want to answer this question.</a>
 </body>
 </html>

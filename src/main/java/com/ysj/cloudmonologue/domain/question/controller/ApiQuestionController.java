@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,11 +47,11 @@ public class ApiQuestionController {
         return "today";
     }
 
-    @PostMapping("/banned/{id}")
+    @GetMapping("/banned/{id}")
     public String banQuestion(@PathVariable("id") Long questionId) {
         MemberDto loggedMember = memberService.findByUserId(rq.getMember());
         String bannedQuestions = loggedMember.getBannedQuestions();
-        if(bannedQuestions.equals("")) bannedQuestions += questionId;
+        if(bannedQuestions == null) bannedQuestions = ""+questionId;
         else bannedQuestions += ("@"+questionId);
         loggedMember.setBannedQuestions(bannedQuestions);
         return "redirect:/today";
