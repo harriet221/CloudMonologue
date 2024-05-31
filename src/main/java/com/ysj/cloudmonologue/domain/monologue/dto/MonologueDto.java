@@ -13,6 +13,13 @@ public class MonologueDto {
     private Long questionId;
     private Long memberId;
     private String content;
+
+    public MonologueDto(){};
+    public MonologueDto(Long questionId, Long memberId, String content){
+        this.questionId = questionId;
+        this.memberId = memberId;
+        this.content = content;
+    };
 }
 
 /*

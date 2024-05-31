@@ -9,7 +9,12 @@
 <div th:if="${error}">
     <p th:text="${error}"></p>
 </div>
-<div th:text="'today\'s question: ' + ${question.content}"></div>
-<a th:href="@{|/banned/${question.id}|}">I don't want to answer this question.</a>
+<div th:text="'today\'s question: ' + ${question.content}"></div><br>
+<button>
+    <a th:href="@{|/${question.id}/answer|}">Make my Monologue</a>
+</button>
+<button>
+    <a th:href="@{|/banned/${question.id}|}">I don't want to answer this question.</a>
+</button>
 </body>
 </html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Today's Question</h2>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+<div th:text="'Question: ' + ${question.content}"></div> <br>
+<form th:action="@{|/${question.id}/answer|}" method="post">
+    <label>
+        <textarea name="monologue"></textarea>
+    </label>
+    <button type="submit">SAVE</button>
+</form>
+</body>
+</html>
