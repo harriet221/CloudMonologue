@@ -24,6 +24,9 @@
 
 ## ETC
 - Entity / Dto 분리와 에러 관련은 Member 쪽과 같음.
+- QuestionDto 관련 컬럼 데이터 타입
+  - question의 content는 varchar(255)로 결정.
+  - MySQL의 문자열 저장 방식이 255를 기준으로 길이가 짧으면 1byte, 길면 2byte로 저장한다고 하여, 255로 결정.
 - question id 전달과 관련한 몇 개의 에러에 부딪힘.
   - 한 html 페이지에서, question.content는 잘 나오는데 question.id는 null 값이 들어오는 문제 발생.
   - DB에선 모든 question에 대해 id가 존재함 = DB 문제 아님.
