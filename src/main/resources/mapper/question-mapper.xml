@@ -4,7 +4,7 @@
 
 <mapper namespace="Question">
     <select id="findById" parameterType="Long" resultType="question">
-        select content from QUESTION_TABLE where id=#{id}
+        select id, content from QUESTION_TABLE where id=#{id}
     </select>
     <select id="countTotal" resultType="int">
         select count(*) from QUESTION_TABLE
