@@ -2,19 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Today's Question</title>
 </head>
 <body>
 <h2>Today's Question</h2>
 <div th:if="${error}">
     <p th:text="${error}"></p>
 </div>
-<div th:text="'today\'s question: ' + ${question.content}"></div><br>
-<button>
-    <a th:href="@{|/${question.id}/answer|}">Make my Monologue</a>
-</button>
-<button>
-    <a th:href="@{|/banned/${question.id}|}">I don't want to answer this question.</a>
-</button>
+<div th:unless="${error}">
+    <p th:text="${question.content}"></p>
+
+    <a th:href="@{|/${question.id}/answer|}">
+        <button type="button">답안 만들기</button>
+    </a>
+
+    <a th:href="@{|/banned/${question.id}|}">
+        <button type="button">이 질문 싫어요</button>
+    </a>
+</div>
 </body>
 </html>
