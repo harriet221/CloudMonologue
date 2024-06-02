@@ -8,6 +8,14 @@
             values(#{userId}, #{username}, #{password})
     </insert>
     <select id="findByUserId" parameterType="String" resultType="member">
-        select id, userId, username, password from MEMBER_TABLE where userId=#{userId}
+        select id, userId, username, password, bannedQuestions from MEMBER_TABLE where userId=#{userId}
     </select>
+    <update id="update" parameterType="member">
+        update MEMBER_TABLE
+        set userId = #{userId},
+            username = #{username},
+            password = #{password},
+            bannedQuestions = #{bannedQuestions}
+        where id = #{id}
+    </update>
 </mapper>

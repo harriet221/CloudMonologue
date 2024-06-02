@@ -52,8 +52,9 @@ public class ApiQuestionController {
         MemberDto loggedMember = memberService.findByUserId(rq.getMember());
         String bannedQuestions = loggedMember.getBannedQuestions();
         if(bannedQuestions == null) bannedQuestions = ""+questionId;
-        else bannedQuestions += ("@"+questionId);
+        else bannedQuestions = bannedQuestions+"@"+questionId;
         loggedMember.setBannedQuestions(bannedQuestions);
+        memberService.update(loggedMember);
         return "redirect:/today";
     }
 }

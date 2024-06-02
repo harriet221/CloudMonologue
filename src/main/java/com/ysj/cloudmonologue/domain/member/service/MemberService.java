@@ -5,8 +5,6 @@ import com.ysj.cloudmonologue.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -18,5 +16,9 @@ public class MemberService {
 
     public MemberDto findByUserId(String userId) {
         return memberRepository.findByUserId(userId);
+    }
+
+    public void update(MemberDto memberDto) {
+        memberRepository.update(memberDto);
     }
 }

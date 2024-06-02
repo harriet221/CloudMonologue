@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
@@ -18,5 +16,9 @@ public class MemberRepository {
 
     public MemberDto findByUserId(String userId) {
         return sql.selectOne("Member.findByUserId", userId);
+    }
+
+    public void update(MemberDto memberDto) {
+        sql.update("Member.update", memberDto);
     }
 }
