@@ -12,7 +12,7 @@
 <div th:text="'Question: ' + ${question.content}"></div> <br>
 <form th:action="@{|/${question.id}/answer|}" method="post">
     <label>
-        <textarea name="monologue"></textarea>
+        <textarea name="content"></textarea>
     </label>
     <button type="submit">SAVE</button>
 </form>
