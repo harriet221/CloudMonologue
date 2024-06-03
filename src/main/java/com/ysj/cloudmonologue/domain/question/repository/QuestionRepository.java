@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class QuestionRepository {
@@ -16,5 +18,9 @@ public class QuestionRepository {
 
     public int countTotal() {
         return sql.selectOne("Question.countTotal");
+    }
+
+    public List<Long> getAnsweredQuestions(Long memberId) {
+        return sql.selectList("Question.getAnsweredQuestions", memberId);
     }
 }

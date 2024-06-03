@@ -17,9 +17,9 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ApiQuestionController {
-    private final Rq rq;
-    private final MemberService memberService;
     private final QuestionService questionService;
+    private final MemberService memberService;
+    private final Rq rq;
 
     @GetMapping("/today")
     public String showTodayQuestion(Model model) {
@@ -29,18 +29,16 @@ public class ApiQuestionController {
             return "login";
         }
         MemberDto loggedMember = memberService.findByUserId(currentUser);
-        // 이미 답변한 질문인지 확인...은 언제하지
-        // Monologue 쪽에서 userid, questionid 저장하고 있는데 이걸로 체크?
-        // 애초에 질문 고를 때 memberid 줘서 monolgue랑 outer join 시키는 게 낫지 않나??
+
         Long questionId;
         if(loggedMember.getBannedQuestions() == null) {
-            questionId = questionService.pickQuestion();
+            questionId = questionService.pickQuestion(loggedMember.getId());
         } else {
             String[] bannedQuestionsArray = loggedMember.getBannedQuestions().split("@");
             List<Long> bannedQuestions = Arrays.stream(bannedQuestionsArray)
                     .map(Long::parseLong)
                     .toList();
-            questionId = questionService.pickQuestion(bannedQuestions);
+            questionId = questionService.pickQuestion(bannedQuestions, loggedMember.getId());
         }
         QuestionDto question = questionService.findQuestionById(questionId);
         model.addAttribute("question", question);

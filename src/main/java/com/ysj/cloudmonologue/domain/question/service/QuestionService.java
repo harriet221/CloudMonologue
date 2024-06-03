@@ -19,20 +19,23 @@ public class QuestionService {
         return questionRepository.findById(id);
     }
 
-    public Long pickQuestion() {
-        return pickQuestion(new ArrayList<>());
+    public Long pickQuestion(Long memberId) {
+        return pickQuestion(new ArrayList<>(), memberId);
     }
 
     // 랜덤 질문 뽑는 메서드
-    public Long pickQuestion(List<Long> bannedList) {
+    public Long pickQuestion(List<Long> bannedList, Long memberId) {
         int total = this.countTotalQuestions();
-        Long randomQuestionId = -1L;
+        List<Long> alreadyAnswered = getAnsweredQuestions(memberId);
+        long randomQuestionId = -1L;
 
         Random random = new Random();
         while (randomQuestionId < 0L) {
             long randomId = random.nextInt(total) + 1;
-            if (!bannedList.contains(randomId))
-                randomQuestionId = randomId;
+
+            if(!alreadyAnswered.contains(randomId))
+                if(!bannedList.contains(randomId))
+                    randomQuestionId = randomId;
         }
         return randomQuestionId;
     }
@@ -42,4 +45,8 @@ public class QuestionService {
         return questionRepository.countTotal();
     }
 
+    // 이미 답변한 질문 목록 가져오는 메서드
+    public List<Long> getAnsweredQuestions(Long memberId) {
+        return questionRepository.getAnsweredQuestions(memberId);
+    }
 }

@@ -9,4 +9,10 @@
     <select id="countTotal" resultType="int">
         select count(*) from QUESTION_TABLE
     </select>
+    <select id="getAnsweredQuestions" parameterType="Long" resultType="Long">
+        select q.id
+        from QUESTION_TABLE q
+        left join MONOLOGUE_TABLE m on q.id = m.questionId and m.memberId = #{memberId}
+        where m.questionId is not null
+    </select>
 </mapper>
