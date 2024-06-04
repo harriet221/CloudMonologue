@@ -22,8 +22,19 @@
 - ESL 토픽으로 speaking / writing 연습, 일상에서 부족한 output을 부담없이 재미있게.
 - 글로 작성하면 comment를 달아주고, 말로 답변하면 문답을 이어가는 나의 인공지능 영어 다이어리.
 
-## 📌 진행상황
+## 📌 Commit Message
+- feat: 기능 구현
+- refact: 기능 수정 없이 코드 변경
+- bug: 미해결 오류/버그
+- bugfix: 오류/버그 해결
+- db: 데이터베이스 별도 업데이트
+- docs: 문서
+-setting: 세팅 관련 수정/변경
 
-### MyBatis 기본 작업
+## 📌 진행 상황
 
-Member_domain
+### MyBatis / 기본 기능 작업
+
+- [Member_domain](https://github.com/harriet221/CloudMonologue/blob/develop/document/Member_domain.md)
+- [Question_domain](https://github.com/harriet221/CloudMonologue/blob/develop/document/Question_domain.md)
+- [Monologue_domain](https://github.com/harriet221/CloudMonologue/blob/develop/document/Monologue_domain.md)
