@@ -10,7 +10,12 @@
     <p th:text="${error}"></p>
 </div>
 <div th:text="'Welcome, ' + ${member.username} + '. Enjoy your time'"></div><br>
-<a href="/today">오늘의 질문 보기</a>
+<div th:if="${doneMonologue == false}">
+    <a href="/today">오늘의 질문 보기</a>
+</div>
+<div th:unless="${doneMonologue == false}">
+    <a href="#">다른 사람들의 질문과 답변 보기</a>
+</div>
 <a href="/logout">로그아웃</a>
 </body>
 </html>
