@@ -28,4 +28,8 @@ public class MemberRepository {
     public Optional<Member> findByUserName(String username) {
         return sql.selectOne("Member.findByUserName", username);
     }
+
+    public Optional<Object> findByRefreshToken(String refreshToken) {
+        return sql.selectOne("Member.findByRefreshToken", refreshToken);
+    }
 }

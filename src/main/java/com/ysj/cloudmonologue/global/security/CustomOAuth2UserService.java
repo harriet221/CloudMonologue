@@ -29,7 +29,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         String nickname = "";
-        String profileImgUrl = "";
         String username = "";
 
         switch (providerTypeCode) {
@@ -38,16 +37,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Map attributesProperties = (Map) attributes.get("properties");
 
                 nickname = (String) attributesProperties.get("nickname") + oauthId.substring(2,6);
-                profileImgUrl = (String) attributesProperties.get("profile_image");
                 break;
             case "GOOGLE":
                 nickname = (String) oAuth2User.getAttributes().get("name") + oauthId.substring(2,6);
-                profileImgUrl = (String) oAuth2User.getAttributes().get("picture");
                 break;
         }
 
         username = providerTypeCode + "__%s".formatted(oauthId);
-        Member member = memberService.join(username, providerTypeCode, nickname, profileImgUrl).getData();
+        Member member = memberService.join(username, providerTypeCode, nickname).getData();
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
     }

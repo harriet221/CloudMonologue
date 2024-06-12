@@ -3,6 +3,7 @@ package com.ysj.cloudmonologue.global.security;
 
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
 import com.ysj.cloudmonologue.global.rq.Rq;
+import com.ysj.cloudmonologue.global.rsData.RsData;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -8,11 +8,12 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    // private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,11 +42,11 @@ public class SecurityConfig {
                                 csrf.ignoringRequestMatchers(
                                         "/h2-console/**"
                                 )
-//                )
-//                .oauth2Login( // 카카오 로그인 활성화에 필수적
-//                        oauth2Login ->
-//                                oauth2Login
-//                                        .successHandler(customAuthenticationSuccessHandler)
+                )
+                .oauth2Login( // 카카오 로그인 활성화에 필수적
+                        oauth2Login ->
+                                oauth2Login
+                                        .successHandler(customAuthenticationSuccessHandler)
                 );
 
         return http.build();

@@ -25,6 +25,7 @@ public class Rq {
     private final EntityManager entityManager;
     private Member member;
 
+    // Cookie
     public void setCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
@@ -34,11 +35,7 @@ public class Rq {
 
     private String getSiteCookieDomain() {
         String cookieDomain = AppConfig.getSiteCookieDomain();
-
-        if (!cookieDomain.equals("localhost")) {
-            return cookieDomain = "." + cookieDomain;
-        }
-
+        if (!cookieDomain.equals("localhost")) return "." + cookieDomain;
         return null;
     }
 
@@ -50,13 +47,11 @@ public class Rq {
                 .secure(true)
                 .httpOnly(true)
                 .build();
-
         resp.addHeader("Set-Cookie", cookie.toString());
     }
 
     public void removeCrossDomainCookie(String name) {
         removeCookie(name);
-
         ResponseCookie cookie = ResponseCookie.from(name, null)
                 .path("/")
                 .maxAge(0)
@@ -64,52 +59,50 @@ public class Rq {
                 .secure(true)
                 .httpOnly(true)
                 .build();
-
         resp.addHeader("Set-Cookie", cookie.toString());
     }
 
     public Cookie getCookie(String name) {
         Cookie[] cookies = req.getCookies();
-
-        if (cookies == null) {
-            return null;
-        }
-
+        if (cookies == null) return null;
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(name)) {
                 return cookie;
             }
         }
-
         return null;
     }
 
     public String getCookieValue(String name, String defaultValue) {
         Cookie cookie = getCookie(name);
-
         if (cookie == null) {
             return defaultValue;
         }
-
         return cookie.getValue();
     }
 
     public void removeCookie(String name) {
         Cookie cookie = getCookie(name);
-
-        if (cookie == null) {
-            return;
-        }
-
+        if (cookie == null) return;
         cookie.setPath("/");
         cookie.setMaxAge(0);
         resp.addCookie(cookie);
     }
 
+    // Session
     public void setSession(String key, String value) {
         req.getSession().setAttribute(key, value);
     }
 
+    public void invalidateSession() {
+        req.getSession().invalidate();
+    }
+
+    public void destroySession() {
+        req.getSession().invalidate();
+    }
+
+    // member / user
     public String getMember() {
         HttpSession session = req.getSession(false); // 기존 세션이 없으면 null 반환
         if (session != null) {
@@ -128,14 +121,6 @@ public class Rq {
         return member;
     }
 
-    public boolean isLogout() {
-        return !isLogin();
-    }
-
-    public boolean isLogin() {
-        return getUser() != null;
-    }
-
     private SecurityUser getUser() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(context -> context.getAuthentication())
@@ -144,16 +129,69 @@ public class Rq {
                 .orElse(null);
     }
 
-    public void invalidateSession() {
-        req.getSession().invalidate();
+    // login / logout
+    public boolean isLogin() {
+        return getUser() != null;
+    }
+
+    public void setLogin(SecurityUser securityUser) {
+        SecurityContextHolder.getContext().setAuthentication(securityUser.genAuthentication());
+    }
+
+    public boolean isLogout() {
+        return !isLogin();
+    }
+
+    public void setLogout() {
+        removeCrossDomainCookie("accessToken");
+        removeCrossDomainCookie("refreshToken");
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    // HTTP request message
+    public String getHeader(String name, Object o) {
+        return req.getHeader(name);
+    }
+
+    public void setHeader(String name, String value) {
+        resp.setHeader(name, value);
     }
 
     public boolean isFrontUrl(String url) {
         return url.startsWith(AppConfig.getSiteFrontUrl());
     }
 
-    public void destroySession() {
-        req.getSession().invalidate();
-    }
-}
+    // redirect
+//    public String redirect(String url, String msg) {
+//        msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("redirect:");
+//        sb.append(url);
+//
+//        if (msg != null) {
+//            sb.append("?msg=");
+//            sb.append(msg);
+//        }
+//        return sb.toString();
+//    }
+//
+//    public String historyBack(String msg) {
+//        req.setAttribute("failMsg", msg);
+//        return "global/js";
+//    }
+//
+//    public String redirectOrBack(RsData<?> rs, String path) {
+//        if (rs.isFail()) return historyBack(rs.getMsg());
+//        return redirect(path, rs.getMsg());
+//    }
 
+    // check admin
+//    public boolean isAdmin() {
+//        if (isLogout()) return false;
+//        return getUser()
+//                .getAuthorities()
+//                .stream()
+//                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+//    }
+}
