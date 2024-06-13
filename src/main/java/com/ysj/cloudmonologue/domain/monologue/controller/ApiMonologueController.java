@@ -30,7 +30,7 @@ public class ApiMonologueController {
 
     @PostMapping("/{id}/answer")
     public String giveAnswer(@PathVariable("id") Long questionId, String content) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember());
+        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
         monologueService.save(questionId, loggedMember.getId(), content);
         return "redirect:/main";
     }

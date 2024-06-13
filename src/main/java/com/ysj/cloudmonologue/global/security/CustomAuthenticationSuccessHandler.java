@@ -26,8 +26,8 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         String redirectUrlAfterSocialLogin = rq.getCookieValue("redirectUrlAfterSocialLogin", "");
 
         if (rq.isFrontUrl(redirectUrlAfterSocialLogin)) {
-            String accessToken = authTokenService.genAccessToken(rq.getMember(0));
-            String refreshToken = rq.getMember(0).getRefreshToken();
+            String accessToken = authTokenService.genAccessToken(rq.getMember());
+            String refreshToken = rq.getMember().getRefreshToken();
 
             rq.destroySession();
             rq.setCrossDomainCookie("accessToken", accessToken);

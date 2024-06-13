@@ -1,6 +1,7 @@
 package com.ysj.cloudmonologue.domain.question.controller;
 
 import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
+import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
 import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
@@ -23,12 +24,12 @@ public class ApiQuestionController {
 
     @GetMapping("/today")
     public String showTodayQuestion(Model model) {
-        String currentUser = rq.getMember();
+        Member currentUser = rq.getMember();
         if(currentUser == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
         }
-        MemberDto loggedMember = memberService.findByUserId(currentUser);
+        MemberDto loggedMember = memberService.findByUserId(currentUser.getUserId());
 
         Long questionId;
         if(loggedMember.getBannedQuestions() == null) {
@@ -47,7 +48,7 @@ public class ApiQuestionController {
 
     @GetMapping("/banned/{id}")
     public String banQuestion(@PathVariable("id") Long questionId) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember());
+        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
         String bannedQuestions = loggedMember.getBannedQuestions();
         if(bannedQuestions == null) bannedQuestions = ""+questionId;
         else bannedQuestions = bannedQuestions+"@"+questionId;

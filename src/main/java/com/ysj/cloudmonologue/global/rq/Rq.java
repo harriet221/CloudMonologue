@@ -7,7 +7,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -103,15 +102,15 @@ public class Rq {
     }
 
     // member / user
-    public String getMember() {
-        HttpSession session = req.getSession(false); // 기존 세션이 없으면 null 반환
-        if (session != null) {
-            return (String) session.getAttribute("userId");
-        }
-        return null;
-    }
+//    public String getMember() {
+//        HttpSession session = req.getSession(false); // 기존 세션이 없으면 null 반환
+//        if (session != null) {
+//            return (String) session.getAttribute("userId");
+//        }
+//        return null;
+//    }
 
-    public Member getMember(int n) {
+    public Member getMember() {
         if (isLogout()) return null;
 
         if (member == null) {

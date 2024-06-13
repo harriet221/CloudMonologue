@@ -17,7 +17,7 @@ public class ApiMemberController {
 
     @GetMapping("/main")
     public String showMain(Model model) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember());
+        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
         if(loggedMember == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
