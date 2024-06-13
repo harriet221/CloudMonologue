@@ -1,7 +1,6 @@
 package com.ysj.cloudmonologue.domain.monologue.controller;
 
-import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
-import com.ysj.cloudmonologue.domain.member.service.MemberService;
+import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.monologue.service.MonologueService;
 import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ApiMonologueController {
     private final MonologueService monologueService;
     private final QuestionService questionService;
-    private final MemberService memberService;
     private final Rq rq;
 
     @GetMapping("/{id}/answer")
@@ -29,9 +27,10 @@ public class ApiMonologueController {
     }
 
     @PostMapping("/{id}/answer")
-    public String giveAnswer(@PathVariable("id") Long questionId, String content) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
-        monologueService.save(questionId, loggedMember.getId(), content);
+    public String giveAnswer(@PathVariable("id") Long questionId, String content) throws Exception {
+        Member member = rq.getMember();
+        if(member == null) throw new Exception("error");
+        monologueService.save(questionId, member.getId(), content);
         return "redirect:/main";
     }
 }

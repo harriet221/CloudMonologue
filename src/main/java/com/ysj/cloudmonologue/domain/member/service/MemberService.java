@@ -1,6 +1,5 @@
 package com.ysj.cloudmonologue.domain.member.service;
 
-import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
 import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.repository.MemberRepository;
 import com.ysj.cloudmonologue.global.rq.Rq;
@@ -26,29 +25,53 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenService authTokenService;
 
-    public void save(MemberDto memberDto) {
-        memberRepository.save(memberDto);
+    public void save(Member member) {
+        memberRepository.save(member);
     }
 
-    public MemberDto findByUserId(String userId) {
-        return memberRepository.findByUserId(userId);
-    }
-
-    public void update(MemberDto memberDto) {
-        memberRepository.update(memberDto);
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
     }
 
     @Transactional
-    public RsData<Member> join(String username, String providerTypeCode, String nickname) {
+    public RsData<Member> join(String username, String password) {
+        return join(username, password, username);
+    }
+
+    @Transactional
+    public RsData<Member> join(String username, String password, String nickname) {
+        if (findByUsername(username).isPresent()) {
+            return RsData.of("400-2", "이미 존재하는 회원입니다.");
+        }
+
+        Member member = Member.builder()
+                .username(username)
+                .nickname(nickname)
+                .password(passwordEncoder.encode(password))
+                .refreshToken(authTokenService.genRefreshToken())
+                .build();
+
+        memberRepository.save(member);
+        return RsData.of("200", "%s님 환영합니다. 회원가입이 완료되었습니다. 로그인 후 이용해주세요.".formatted(member.getUsername()), member);
+    }
+
+    @Transactional
+    public RsData<Member> modifyOrJoin(String username, String providerTypeCode, String nickname) {
         Member member = findByUsername(username).orElse(null);
 
-        return join(username, "", nickname);
+        if (member == null) {
+            return join(
+                    username, "", nickname
+            );
+        }
+        return modify(member);
     }
 
-    private Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUserName(username);
+    @Transactional
+    public RsData<Member> modify(Member member) {
+        member.setNickname(member.getNickname());
+        return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
     }
-
 
     public record AuthAndMakeTokensResponseBody(
             @NonNull

@@ -44,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         username = providerTypeCode + "__%s".formatted(oauthId);
-        Member member = memberService.join(username, providerTypeCode, nickname).getData();
+        Member member = memberService.modifyOrJoin(username, providerTypeCode, nickname).getData();
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
     }

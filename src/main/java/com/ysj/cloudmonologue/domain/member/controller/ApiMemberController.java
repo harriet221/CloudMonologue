@@ -1,15 +1,18 @@
 package com.ysj.cloudmonologue.domain.member.controller;
 
-import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
+import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
 import com.ysj.cloudmonologue.global.rq.Rq;
+import com.ysj.cloudmonologue.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ApiMemberController {
     private final MemberService memberService;
@@ -17,58 +20,35 @@ public class ApiMemberController {
 
     @GetMapping("/main")
     public String showMain(Model model) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
-        if(loggedMember == null) {
+        Member member = rq.getMember();
+        if(member == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
         }
-        model.addAttribute("member", loggedMember);
+        model.addAttribute("member", member);
         return "main";
     }
 
-    @GetMapping("/signup")
-    public String signup() {
-        return "signup";
+    public record LoginRequestBody(@NotBlank String username, @NotBlank String password) {
     }
 
-    @PostMapping("/signup")
-    public String signup(MemberDto memberDto, Model model) {
-        // 이미 가입한 ID 인지 체크
-        MemberDto memberInfoDto = memberService.findByUserId(memberDto.getUserId());
-        if(memberInfoDto != null) {
-            model.addAttribute("error", "! 이미 사용 중인 ID 입니다 !");
-            return "signup";
-        }
-        memberService.save(memberDto);
-        return "redirect:/login";
-    }
+    @PostMapping(value = "/login")
+    @Operation(summary = "로그인, accessToken, refreshToken 쿠키 생성됨")
+    public String login(@Valid @RequestBody LoginRequestBody body) throws Exception {
+        RsData<MemberService.AuthAndMakeTokensResponseBody> authAndMakeTokensRs = memberService.authAndMakeTokens(
+                body.username,
+                body.password
+        );
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+        rq.setCrossDomainCookie("refreshToken", authAndMakeTokensRs.getData().refreshToken());
+        rq.setCrossDomainCookie("accessToken", authAndMakeTokensRs.getData().accessToken());
 
-    @PostMapping("/login")
-    public String login(MemberDto memberDto, Model model) {
-        // 유효한 ID 인지 체크 without Spring Security
-        MemberDto memberInfoDto = memberService.findByUserId(memberDto.getUserId());
-        if(memberInfoDto == null) {
-            model.addAttribute("error", "! 해당 ID가 존재하지 않습니다 !");
-            return "login";
-        }
-        // 비번 일치 체크 without Spring Security
-        if(!memberDto.getPassword().equals(memberInfoDto.getPassword())) {
-            model.addAttribute("error", "! 비밀번호가 일치하지 않습니다 !");
-            return "login";
-        }
-        rq.setSession("userId", memberDto.getUserId());
         return "redirect:/main";
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout() {
-        rq.invalidateSession();
-        System.out.println("로그아웃 완료");
+        rq.setLogout();
         return "redirect:/";
     }
 }

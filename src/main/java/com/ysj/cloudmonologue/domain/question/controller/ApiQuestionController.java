@@ -1,6 +1,5 @@
 package com.ysj.cloudmonologue.domain.question.controller;
 
-import com.ysj.cloudmonologue.domain.member.dto.MemberDto;
 import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
 import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
@@ -24,22 +23,21 @@ public class ApiQuestionController {
 
     @GetMapping("/today")
     public String showTodayQuestion(Model model) {
-        Member currentUser = rq.getMember();
-        if(currentUser == null) {
+        Member member = rq.getMember();
+        if(member == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
         }
-        MemberDto loggedMember = memberService.findByUserId(currentUser.getUserId());
 
         Long questionId;
-        if(loggedMember.getBannedQuestions() == null) {
-            questionId = questionService.pickQuestion(loggedMember.getId());
+        if(member.getBannedQuestions() == null) {
+            questionId = questionService.pickQuestion(member.getId());
         } else {
-            String[] bannedQuestionsArray = loggedMember.getBannedQuestions().split("@");
+            String[] bannedQuestionsArray = member.getBannedQuestions().split("@");
             List<Long> bannedQuestions = Arrays.stream(bannedQuestionsArray)
                     .map(Long::parseLong)
                     .toList();
-            questionId = questionService.pickQuestion(bannedQuestions, loggedMember.getId());
+            questionId = questionService.pickQuestion(bannedQuestions, member.getId());
         }
         QuestionDto question = questionService.findQuestionById(questionId);
         model.addAttribute("question", question);
@@ -48,12 +46,12 @@ public class ApiQuestionController {
 
     @GetMapping("/banned/{id}")
     public String banQuestion(@PathVariable("id") Long questionId) {
-        MemberDto loggedMember = memberService.findByUserId(rq.getMember().getUserId());
-        String bannedQuestions = loggedMember.getBannedQuestions();
+        Member member = rq.getMember();
+        String bannedQuestions = member.getBannedQuestions();
         if(bannedQuestions == null) bannedQuestions = ""+questionId;
         else bannedQuestions = bannedQuestions+"@"+questionId;
-        loggedMember.setBannedQuestions(bannedQuestions);
-        memberService.update(loggedMember);
+        member.setBannedQuestions(bannedQuestions);
+        memberService.save(member);
         return "redirect:/today";
     }
 }
