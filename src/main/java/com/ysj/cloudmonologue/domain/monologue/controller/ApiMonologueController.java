@@ -2,17 +2,17 @@ package com.ysj.cloudmonologue.domain.monologue.controller;
 
 import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.monologue.service.MonologueService;
-import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
+import com.ysj.cloudmonologue.domain.question.entity.Question;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
 import com.ysj.cloudmonologue.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/monologue")
 @RequiredArgsConstructor
 public class ApiMonologueController {
     private final MonologueService monologueService;
@@ -20,9 +20,13 @@ public class ApiMonologueController {
     private final Rq rq;
 
     @GetMapping("/{id}/answer")
-    public String giveAnswer(@PathVariable("id") Long questionId, Model model) {
-        QuestionDto questionDto = questionService.findQuestionById(questionId);
-        model.addAttribute("question", questionDto);
+    public String giveAnswer(@PathVariable("id") Long questionId, Model model) throws Exception {
+        Optional<Question> question = questionService.findQuestionById(questionId);
+        if (question.isPresent()) {
+            model.addAttribute("question", question);
+        } else {
+            throw new Exception("error");
+        }
         return "monologue";
     }
 

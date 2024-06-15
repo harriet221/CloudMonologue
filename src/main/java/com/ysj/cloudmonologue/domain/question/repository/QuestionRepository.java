@@ -1,26 +1,24 @@
 package com.ysj.cloudmonologue.domain.question.repository;
 
-import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
-import lombok.RequiredArgsConstructor;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.stereotype.Repository;
+
+import com.ysj.cloudmonologue.domain.question.entity.Question;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-@RequiredArgsConstructor
-public class QuestionRepository {
-    private final SqlSessionTemplate sql;
+public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    public QuestionDto findById(Long id) {
-        return sql.selectOne("Question.findById", id);
-    }
+    Optional<Question> findQuestionById(Long id);
 
-    public int countTotal() {
-        return sql.selectOne("Question.countTotal");
-    }
+    @Query("SELECT count(*) from Question")
+    int countTotal();
 
-    public List<Long> getAnsweredQuestions(Long memberId) {
-        return sql.selectList("Question.getAnsweredQuestions", memberId);
-    }
+    @Query("SELECT q.id " +
+            "FROM Question q " +
+            "LEFT JOIN Monologue m ON q.id = m.questionId AND m.memberId = :memberId " +
+            "WHERE m.questionId IS NOT NULL")
+    List<Long> getAnsweredQuestions(@Param("memberId") Long memberId);
 }

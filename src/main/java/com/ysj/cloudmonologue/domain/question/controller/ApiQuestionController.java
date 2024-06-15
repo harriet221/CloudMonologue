@@ -2,32 +2,39 @@ package com.ysj.cloudmonologue.domain.question.controller;
 
 import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
-import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
+import com.ysj.cloudmonologue.domain.question.entity.Question;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
 import com.ysj.cloudmonologue.global.rq.Rq;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api/question")
 @RequiredArgsConstructor
 public class ApiQuestionController {
     private final QuestionService questionService;
     private final MemberService memberService;
-    private final Rq rq;
+    private final Rq rq;ㅡ
 
     @GetMapping("/today")
-    public String showTodayQuestion(Model model) {
+    @Operation(summary = "오늘의 질문 보기")
+    public String showTodayQuestion(Model model) throws Exception {
         Member member = rq.getMember();
         if(member == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
         }
+
+        // TODO: 로그인 체크
 
         Long questionId;
         if(member.getBannedQuestions() == null) {
@@ -39,8 +46,12 @@ public class ApiQuestionController {
                     .toList();
             questionId = questionService.pickQuestion(bannedQuestions, member.getId());
         }
-        QuestionDto question = questionService.findQuestionById(questionId);
-        model.addAttribute("question", question);
+        Optional<Question> question = questionService.findQuestionById(questionId);
+        if (question.isPresent()) {
+            model.addAttribute("question", question);
+        } else {
+            throw new Exception("error");
+        }
         return "today";
     }
 

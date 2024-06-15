@@ -1,12 +1,13 @@
 package com.ysj.cloudmonologue.domain.question.service;
 
-import com.ysj.cloudmonologue.domain.question.dto.QuestionDto;
+import com.ysj.cloudmonologue.domain.question.entity.Question;
 import com.ysj.cloudmonologue.domain.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -15,8 +16,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     // 질문 id로 내용 찾는 메서드
-    public QuestionDto findQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> findQuestionById(Long id) {
+        return questionRepository.findQuestionById(id);
     }
 
     public Long pickQuestion(Long memberId) {
