@@ -38,8 +38,6 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String refreshToken;
 
-    private String profileImgUrl;
-
     @Transactional
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getAuthoritiesAsStringList()

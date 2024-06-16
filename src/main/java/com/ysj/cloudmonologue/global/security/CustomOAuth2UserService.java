@@ -29,21 +29,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         String nickname = "";
-        String username = "";
+        String username = providerTypeCode + "__%s".formatted(oauthId);
 
         switch (providerTypeCode) {
             case "KAKAO":
                 Map<String, Object> attributes = oAuth2User.getAttributes();
                 Map attributesProperties = (Map) attributes.get("properties");
 
-                nickname = (String) attributesProperties.get("nickname") + oauthId.substring(2,6);
+                nickname = (String) attributesProperties.get("nickname");
                 break;
             case "GOOGLE":
-                nickname = (String) oAuth2User.getAttributes().get("name") + oauthId.substring(2,6);
+                nickname = (String) oAuth2User.getAttributes().get("name");
                 break;
         }
 
-        username = providerTypeCode + "__%s".formatted(oauthId);
         Member member = memberService.modifyOrJoin(username, providerTypeCode, nickname).getData();
 
         return new SecurityUser(member.getId(), member.getUsername(), member.getPassword(), member.getAuthorities());
