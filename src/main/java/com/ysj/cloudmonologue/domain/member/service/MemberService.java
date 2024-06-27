@@ -2,7 +2,8 @@ package com.ysj.cloudmonologue.domain.member.service;
 
 import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.repository.MemberRepository;
-import com.ysj.cloudmonologue.global.rq.Rq;
+import com.ysj.cloudmonologue.global.exceptions.CodeMsg;
+import com.ysj.cloudmonologue.global.exceptions.GlobalException;
 import com.ysj.cloudmonologue.global.rsData.RsData;
 import com.ysj.cloudmonologue.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final Rq rq;
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenService authTokenService;
 
@@ -41,7 +41,7 @@ public class MemberService {
     @Transactional
     public RsData<Member> join(String username, String password, String nickname) {
         if (findByUsername(username).isPresent()) {
-            return RsData.of("400-2", "이미 존재하는 회원입니다.");
+            return RsData.of(CodeMsg.E400_Bad_Request.getCode(),"이미 존재하는 회원입니다.");
         }
 
         Member member = Member.builder()
@@ -64,13 +64,13 @@ public class MemberService {
                     username, "", nickname
             );
         }
-        return modify(member);
+        return modify(member, nickname);
     }
 
     @Transactional
-    public RsData<Member> modify(Member member) {
-        member.setNickname(member.getNickname());
-        return RsData.of("200-2","회원정보가 수정되었습니다.".formatted(member.getUsername()), member);
+    public RsData<Member> modify(Member member, String nickname) {
+        member.setNickname(nickname);
+        return RsData.of("200", "회원 정보가 수정되었습니다.");
     }
 
     public record AuthAndMakeTokensResponseBody(
@@ -83,18 +83,18 @@ public class MemberService {
     ) {}
 
     @Transactional
-    public RsData<AuthAndMakeTokensResponseBody> authAndMakeTokens(String username, String password) throws Exception {
+    public RsData<AuthAndMakeTokensResponseBody> authAndMakeTokens(String username, String password) {
         Member member = findByUsername(username)
-                .orElseThrow(() -> new Exception("error"));
+                .orElseThrow(() -> new GlobalException(CodeMsg.E404_Not_Found.getCode(), "해당 유저가 존재하지 않습니다."));
 
         if (!passwordMatches(member, password))
-            throw new Exception("error");
+            throw new GlobalException(CodeMsg.E400_Bad_Request.getCode(), "비밀번호가 일치하지 않습니다.");
 
         String refreshToken = member.getRefreshToken();
         String accessToken = authTokenService.genAccessToken(member);
 
         return RsData.of(
-                "200-1",
+                "200",
                 "로그인 성공",
                 new AuthAndMakeTokensResponseBody(member, accessToken, refreshToken)
         );
@@ -128,8 +128,9 @@ public class MemberService {
         return authTokenService.validateToken(token);
     }
 
-    public RsData<String> refreshAccessToken(String refreshToken) throws Exception {
-        Member member = (Member) memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new Exception("error"));
+    public RsData<String> refreshAccessToken(String refreshToken) {
+        Member member = (Member) memberRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new GlobalException(CodeMsg.E404_Not_Found.getCode(), "해당 리프레시 토큰이 존재하지 않습니다."));
 
         String accessToken = authTokenService.genAccessToken(member);
 

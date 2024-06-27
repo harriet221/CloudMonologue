@@ -1,34 +1,34 @@
 package com.ysj.cloudmonologue.domain.member.dto;
 
+import com.ysj.cloudmonologue.domain.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 @Setter
 @ToString
 public class MemberDto {
     private Long id;
-    private String createDate;
-    private String modifyDate;
-    private String userId;
+    private LocalDateTime createDate;
     private String username;
+    private String nickname;
     private String password;
     private String bannedQuestions;
     // private List<Long> bannedQuestions;
-}
 
-/*
--- member_table
- drop table if exists MEMBER_TABLE;
- create table MEMBER_TABLE
- (
-	id bigint primary key auto_increment,
-    createDate datetime default now(),
-    modifyDate datetime,
-    userId varchar(20),
-    username varchar(20),
-    password varchar(20),
-    bannedQuestions text
-);
-* */
+    public MemberDto(Member member) {
+        this.id = member.getId();
+        this.createDate = member.getCreateDate();
+        this.username = member.getUsername();
+        this.nickname = member.getNickname();
+        this.password = member.getPassword();
+        this.bannedQuestions = member.getBannedQuestions();
+    };
+}

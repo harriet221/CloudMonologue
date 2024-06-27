@@ -102,21 +102,12 @@ public class Rq {
     }
 
     // member / user
-//    public String getMember() {
-//        HttpSession session = req.getSession(false); // 기존 세션이 없으면 null 반환
-//        if (session != null) {
-//            return (String) session.getAttribute("userId");
-//        }
-//        return null;
-//    }
-
     public Member getMember() {
         if (isLogout()) return null;
 
         if (member == null) {
             member = entityManager.getReference(Member.class, getUser().getId());
         }
-
         return member;
     }
 

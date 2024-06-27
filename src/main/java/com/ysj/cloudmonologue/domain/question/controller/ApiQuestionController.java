@@ -4,6 +4,8 @@ import com.ysj.cloudmonologue.domain.member.entity.Member;
 import com.ysj.cloudmonologue.domain.member.service.MemberService;
 import com.ysj.cloudmonologue.domain.question.entity.Question;
 import com.ysj.cloudmonologue.domain.question.service.QuestionService;
+import com.ysj.cloudmonologue.global.exceptions.CodeMsg;
+import com.ysj.cloudmonologue.global.exceptions.GlobalException;
 import com.ysj.cloudmonologue.global.rq.Rq;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +25,16 @@ import java.util.Optional;
 public class ApiQuestionController {
     private final QuestionService questionService;
     private final MemberService memberService;
-    private final Rq rq;ㅡ
+    private final Rq rq;
 
     @GetMapping("/today")
     @Operation(summary = "오늘의 질문 보기")
-    public String showTodayQuestion(Model model) throws Exception {
+    public String showTodayQuestion(Model model) {
         Member member = rq.getMember();
         if(member == null) {
             model.addAttribute("error", "! 로그인 후 이용해 주세요 !");
             return "login";
         }
-
-        // TODO: 로그인 체크
 
         Long questionId;
         if(member.getBannedQuestions() == null) {
@@ -50,7 +50,7 @@ public class ApiQuestionController {
         if (question.isPresent()) {
             model.addAttribute("question", question);
         } else {
-            throw new Exception("error");
+            throw new GlobalException(CodeMsg.E404_Not_Found.getCode(), CodeMsg.E404_Not_Found.getMessage());
         }
         return "today";
     }
